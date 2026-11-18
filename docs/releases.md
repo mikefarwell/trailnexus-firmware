@@ -1,0 +1,7 @@
+# Releases and Shopify
+
+Add a product/revision YAML under targets and add it to the Build workflow matrix. Use product-specific tags such as core-r1-v1.0.0 so new products can release independently. Enable a product in release-targets.json only after its approved hardware contract, flashing and recovery instructions, and hardware verification are available. The release workflow accepts an approved target and a version from main, builds the ESPHome configuration, hashes the factory and OTA binaries, and publishes a draft GitHub release for staff review. Check the binary types against the real target and publish the draft after verification.
+
+For Shopify, link the public GitHub Releases index from the Support page, and link each product's exact release page from its product help section and technical documentation. Add the revision, release notes and flashing/recovery instructions beside versioned links. Use the Releases index for browsing and exact release links for installation instructions so future product releases do not silently replace links for earlier hardware. Add storefront links when the first approved release is public. Keep staff test hardware, firmware, and artifacts within private staff access.
+
+Only TrailNexus staff receive write access. Review collaborator access before adding maintainers, and protect main and release tags against force updates or deletion. Keep build secrets and signing keys outside version control.

@@ -1,0 +1,17 @@
+esphome:
+  name: trailnexus-core-dev
+
+esp32:
+  board: esp32dev
+  framework:
+    type: esp-idf
+
+logger:
+
+external_components:
+  - source:
+      type: local
+      path: ../../components
+
+trailnexus_core:
+  id: trailnexus_core
