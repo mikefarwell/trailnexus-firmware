@@ -14,4 +14,4 @@ external_components:
       path: ../../components
 
 trailnexus_core:
-  id: trailnexus_core
+  id: tn_core
