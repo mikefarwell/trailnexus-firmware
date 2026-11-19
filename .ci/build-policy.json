@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "metadataOnlyPatterns": ["README.md","AGENTS.md","LICENSE","docs/*.md","docs/**/*.md",".change-reviews/*.json",".github/workflows/change-quality.yml","scripts/change_quality_gate.py","scripts/install_quality_scanner.py","scripts/quality-security-tools.json","tests/test_change_quality.py"],
+  "pushAndManualAlwaysFull": true,
+  "unknownPathsAlwaysFull": true,
+  "emptyOrUnavailableDiffAlwaysFull": true,
+  "requiredCheckAlwaysReports": true
+}
