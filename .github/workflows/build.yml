@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        config: [targets/core/development.yaml, targets/bench/can-responder.yaml]
+        config: [targets/core/development.yaml, targets/bench/can-responder.yaml, targets/bench/can-scanner.yaml]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

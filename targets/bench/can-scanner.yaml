@@ -1,0 +1,95 @@
+esphome:
+  name: trailnexus-can-scanner
+  includes:
+    - ../../components/trailnexus_core/can_discovery.h
+    - ../../components/trailnexus_core/can_enumerator.h
+  on_boot:
+    priority: -100
+    then:
+      - delay: 2s
+      - lambda: |-
+          id(scan).start(50, 1024, 16);
+          ESP_LOGI("can_scan", "Starting private CAN bench scan");
+
+esp32:
+  board: esp32-s3-devkitc-1
+  framework:
+    type: esp-idf
+
+logger:
+
+globals:
+  - id: scan
+    type: trailnexus::can::Enumerator
+    restore_value: false
+
+canbus:
+  - platform: esp32_can
+    id: scanner_can
+    tx_pin: GPIO4
+    rx_pin: GPIO5
+    can_id: 0x1A100000
+    use_extended_id: true
+    bit_rate: 125KBPS
+    tx_queue_len: 8
+    on_frame:
+      - can_id: 0x1A100004
+        can_id_mask: 0x1FFFFFFC
+        use_extended_id: true
+        remote_transmission_request: false
+        then:
+          - lambda: |-
+              id(scan).receive(can_id, x.data(), x.size(), millis());
+
+interval:
+  - interval: 5ms
+    then:
+      - lambda: |-
+          using trailnexus::can::ScanStatus;
+          auto &scanner = id(scan);
+          if (scanner.status() != ScanStatus::scanning)
+            return;
+          if (const auto query = scanner.next_query(millis())) {
+            for (uint8_t fragment = 0; fragment < 4; ++fragment) {
+              const auto payload = trailnexus::can::query_fragment(
+                  query->prefix, query->bits, query->token, fragment);
+              const std::vector<uint8_t> frame(payload.begin(), payload.end());
+              if (id(scanner_can).send_data(trailnexus::can::query_base + fragment, true, frame)
+                    != esphome::canbus::ERROR_OK) {
+                scanner.transport_failed();
+                ESP_LOGE("can_scan", "Fragment %u could not be queued", unsigned(fragment));
+                return;
+              }
+            }
+            return;
+          }
+          switch (scanner.status()) {
+            case ScanStatus::scanning:
+            case ScanStatus::idle:
+              return;
+            case ScanStatus::incomplete:
+              ESP_LOGW("can_scan", "Incomplete scan: a previously reported prefix stopped responding");
+              return;
+            case ScanStatus::limit:
+              ESP_LOGW("can_scan", "Incomplete scan: query or node budget exhausted");
+              return;
+            case ScanStatus::transport_error:
+              ESP_LOGE("can_scan", "Incomplete scan: CAN transport error");
+              return;
+            case ScanStatus::complete:
+              break;
+          }
+          if (scanner.identities().empty()) {
+            ESP_LOGW("can_scan", "Inconclusive: no replies; inspect CAN power, wiring and acknowledgements");
+            return;
+          }
+          ESP_LOGI("can_scan", "Found %u UUID(s)", unsigned(scanner.identities().size()));
+          for (const auto &uuid : scanner.identities()) {
+            char hex[33]{};
+            constexpr char digits[] = "0123456789abcdef";
+            for (size_t i = 0; i < uuid.size(); ++i) {
+              hex[2 * i] = digits[uuid[i] >> 4];
+              hex[2 * i + 1] = digits[uuid[i] & 0x0F];
+            }
+            ESP_LOGI("can_scan", "UUID %s", hex);
+          }
