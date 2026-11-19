@@ -81,7 +81,7 @@ def cache_keys(root, profile_name="core-development", resolved=False):
     policy_files = [root / ".ci" / name for name in ("build-profiles.json", "build-policy.json", "cache-policy.json")]
     policy_files += [root / "scripts/build_policy.py", root / ".github/workflows/build.yml"]
     policy_hash = digest([{ "file": p.relative_to(root).as_posix(), "sha256": hashlib.sha256(p.read_bytes()).hexdigest()} for p in policy_files])
-    tool = {"python": sys.version, "implementation": platform.python_implementation(), "system": platform.system(), "machine": platform.machine(),
+    tool = {"python": sys.version, "pip": importlib.metadata.version("pip"), "implementation": platform.python_implementation(), "system": platform.system(), "machine": platform.machine(),
             "imageOS": os.environ.get("ImageOS", "local"), "imageVersion": os.environ.get("ImageVersion", "local")}
     if resolved:
         tool["distributions"] = sorted((distribution.metadata["Name"].lower(), distribution.version) for distribution in importlib.metadata.distributions())
