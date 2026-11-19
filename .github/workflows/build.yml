@@ -17,5 +17,6 @@ jobs:
         with:
           python-version: '3.12'
       - run: g++ -std=c++17 -Wall -Wextra -Werror tests/board_registry.cpp -o /tmp/board-registry && /tmp/board-registry
+      - run: g++ -std=c++17 -Wall -Wextra -Werror tests/port_recovery.cpp -o /tmp/port-recovery && /tmp/port-recovery
       - run: python -m pip install -r requirements.txt
       - run: esphome compile "${{ matrix.config }}"
