@@ -1,4 +1,5 @@
 substitutions:
+  can_bit_rate: "1000KBPS"
   fixture_id_byte: "0x80"
 
 esphome:
@@ -20,7 +21,7 @@ canbus:
     rx_pin: GPIO5
     can_id: 0x1A100004
     use_extended_id: true
-    bit_rate: 125KBPS
+    bit_rate: ${can_bit_rate}
     on_frame:
       - can_id: 0x1A100000
         can_id_mask: 0x1FFFFFFC

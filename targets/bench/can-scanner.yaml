@@ -1,3 +1,6 @@
+substitutions:
+  can_bit_rate: "1000KBPS"
+
 esphome:
   name: trailnexus-can-scanner
   includes:
@@ -26,7 +29,7 @@ canbus:
     rx_pin: GPIO5
     can_id: 0x1A100000
     use_extended_id: true
-    bit_rate: 125KBPS
+    bit_rate: ${can_bit_rate}
     tx_queue_len: 8
     on_frame:
       - can_id: 0x1A100004
