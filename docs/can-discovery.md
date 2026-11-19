@@ -1,0 +1,9 @@
+# Private Classical CAN discovery prototype
+
+Use a TrailNexus-only CAN harness. EEPROM and peripherals remain on local I²C. This prototype has no vehicle CAN interface and no output commands.
+
+A Core controller on one independent chain sends four extended data frames at IDs 0x1A100000 through 0x1A100003, in order. Each frame carries a version byte (1), prefix length in bits (0–128), a two-byte big-endian query token, and four successive UUID-prefix bytes. Prefixes are MSB-first. A matching module responds with an identical three-byte payload per token and branch: version and token. Response IDs 0x1A100004 and 0x1A100005 mean the next UUID bit is 0 or 1. ID 0x1A100006 indicates a full match. No response means no matching node only after the Core's qualified response window and error checks. Multiple nodes on one branch use identical ID and data so simultaneous replies do not conflict. The coordinator must deduplicate repeated replies and perform bounded prefix traversal with one outstanding token per port. This responder prototype does not yet implement traversal, address assignment, liveness or product control.
+
+A duplicate factory UUID cannot be counted via identical presence replies. Enforce UUID uniqueness during provisioning and verify the production conflict strategy before granting output access. Use port-recovery independently of discovery and qualify the installed hardware before enabling power switching.
+
+For an isolated bench with an external transceiver, compile `targets/bench/can-responder.yaml`. Build a second node with a different `fixture_id_byte` substitution. The GPIO mapping, UUID bytes, speed and assembler timeout are development settings. This target is outside the release allowlist.
