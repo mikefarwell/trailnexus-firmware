@@ -3,12 +3,13 @@ esphome:
   includes:
     - ../../components/trailnexus_core/can_discovery.h
     - ../../components/trailnexus_core/can_enumerator.h
+    - can_scanner_state.h
   on_boot:
     priority: -100
     then:
       - delay: 2s
       - lambda: |-
-          id(scan).start(50, 1024, 16);
+          bench_can_scan().start(50, 1024, 16);
           ESP_LOGI("can_scan", "Starting private CAN bench scan");
 
 esp32:
@@ -17,11 +18,6 @@ esp32:
     type: esp-idf
 
 logger:
-
-globals:
-  - id: scan
-    type: trailnexus::can::Enumerator
-    restore_value: false
 
 canbus:
   - platform: esp32_can
@@ -39,14 +35,14 @@ canbus:
         remote_transmission_request: false
         then:
           - lambda: |-
-              id(scan).receive(can_id, x.data(), x.size(), millis());
+              bench_can_scan().receive(can_id, x.data(), x.size(), millis());
 
 interval:
   - interval: 5ms
     then:
       - lambda: |-
           using trailnexus::can::ScanStatus;
-          auto &scanner = id(scan);
+          auto &scanner = bench_can_scan();
           if (scanner.status() != ScanStatus::scanning)
             return;
           if (const auto query = scanner.next_query(millis())) {
