@@ -14,10 +14,10 @@ int main() {
              HubPowerStatus::waiting);
       auto d = hub.evaluate({true, true, upstream, false, false, 0});
       assert(d.status == HubPowerStatus::verifying && d.upstream_input == upstream &&
-             !d.downstream_outputs);
+             !d.downstream_outputs && !d.enable_upstream_input);
       d = hub.evaluate({true, false, upstream, false, true, outputs});
       assert(d.status == HubPowerStatus::ready && d.upstream_input == upstream &&
-             d.downstream_outputs == outputs);
+             d.downstream_outputs == outputs && d.enable_upstream_input);
       d = hub.evaluate({true, false, static_cast<uint8_t>(upstream | outputs),
                         false, true, outputs});
       assert(d.upstream_input == upstream && d.downstream_outputs == outputs);

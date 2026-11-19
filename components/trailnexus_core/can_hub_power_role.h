@@ -23,9 +23,11 @@ struct HubPowerInputs {
 
 struct HubPowerDecision {
   HubPowerStatus status;
-  // Masks are mutually exclusive. Hardware must enforce isolation independently.
+  // Upstream selection identifies the link even before its high-current path
+  // is enabled. An adapter must honor enable_upstream_input separately.
   uint8_t upstream_input;
   uint8_t downstream_outputs;
+  bool enable_upstream_input;
 };
 
 // Policy only. Run on one task. The adapter owns debouncing, rail thresholds,
@@ -44,7 +46,7 @@ class HubPowerRoles {
         return lock();
       const auto candidates = in.powered_jacks;
       if (!candidates)
-        return {HubPowerStatus::waiting, 0, 0};
+        return {HubPowerStatus::waiting, 0, 0, false};
       if (candidates & (candidates - 1u))
         return lock();
       upstream_ = candidates;
@@ -55,11 +57,11 @@ class HubPowerRoles {
     if (!in.upstream_confirmed) {
       if (active_)
         return lock();
-      return {HubPowerStatus::verifying, upstream_, 0};
+      return {HubPowerStatus::verifying, upstream_, 0, false};
     }
 
     active_ = true;
-    return {HubPowerStatus::ready, upstream_, in.authorized_outputs};
+    return {HubPowerStatus::ready, upstream_, in.authorized_outputs, true};
   }
 
   // Reset only after the adapter confirms all high-current paths are isolated.
@@ -75,7 +77,7 @@ class HubPowerRoles {
  private:
   HubPowerDecision lock() {
     locked_ = true;
-    return {HubPowerStatus::locked, 0, 0};
+    return {HubPowerStatus::locked, 0, 0, false};
   }
 
   const uint8_t valid_jacks_;
