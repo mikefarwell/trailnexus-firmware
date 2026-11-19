@@ -21,5 +21,6 @@ jobs:
       - run: g++ -std=c++17 -Wall -Wextra -Werror tests/can_discovery.cpp -o /tmp/can-discovery && /tmp/can-discovery
       - run: g++ -std=c++17 -Wall -Wextra -Werror tests/can_enumerator.cpp -o /tmp/can-enumerator && /tmp/can-enumerator
       - run: g++ -std=c++17 -Wall -Wextra -Werror tests/can_termination.cpp -o /tmp/can-termination && /tmp/can-termination
+      - run: g++ -std=c++17 -Wall -Wextra -Werror tests/can_hub_power_role.cpp -o /tmp/can-hub-power-role && /tmp/can-hub-power-role
       - run: python -m pip install -r requirements.txt
       - run: esphome compile "${{ matrix.config }}"
