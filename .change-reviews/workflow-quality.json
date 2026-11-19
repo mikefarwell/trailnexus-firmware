@@ -1,0 +1,15 @@
+{
+  "summary": "Add public-safe automated change-quality and secret checks while preserving existing firmware builds.",
+  "verification": ["python -m unittest discover -s tests -p test_change_quality.py -v", "Pinned Gitleaks scan", "Hosted change-quality workflow"],
+  "impacts": {
+    "specifications":{"status":"no-change","reason":"No product requirement, interface or behavior changes; engineering tooling is reviewed separately."},
+    "product-firmware":{"status":"no-change","reason":"No C++, target, configuration or runtime behavior changes."},
+    "lab-firmware":{"status":"no-change","reason":"No fixture behavior or pinned product dependency changes."},
+    "system-overview":{"status":"no-change","reason":"No customer system topology or compatibility changes."},
+    "component-guides":{"status":"no-change","reason":"No product installation or use changes."},
+    "qa":{"status":"updated","reason":"Add repeatable PR quality checks; acceptance limits and physical procedures remain unchanged.","evidence":["scripts/change_quality_gate.py","tests/test_change_quality.py"]},
+    "cost":{"status":"no-change","reason":"No production hardware or parts changes. CI uses the existing Actions allocation."},
+    "shared-designs":{"status":"no-change","reason":"No shared circuit edits."},
+    "release":{"status":"no-change","reason":"Existing build/release workflows retained; no firmware is published by this change."}
+  }
+}
