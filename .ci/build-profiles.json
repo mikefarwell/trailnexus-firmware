@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "authority": "Owner-requested software build profiles; not approved product hardware or release targets",
+  "profiles": {
+    "core-development": {
+      "status": "operational",
+      "target": "targets/core/development.yaml",
+      "python": "3.12",
+      "requirements": "requirements.txt",
+      "registryTest": "tests/board_registry.cpp",
+      "qualificationEligible": false
+    }
+  }
+}
