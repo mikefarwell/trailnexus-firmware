@@ -1,0 +1,29 @@
+# Development profile for ESP32-S3-WROOM-1U-N16R8. Not a production I/O map.
+esphome:
+  name: trailnexus-core-s3-ecc
+  includes:
+    - ../../components/trailnexus_core/n16r8_memory_guard.h
+
+esp32:
+  board: esp32-s3-devkitc-1
+  variant: ESP32S3
+  flash_size: 16MB
+  framework:
+    type: esp-idf
+
+psram:
+  mode: octal
+  speed: 80MHz
+  enable_ecc: true
+  ignore_not_found: false
+
+logger:
+  hardware_uart: USB_SERIAL_JTAG
+
+external_components:
+  - source:
+      type: local
+      path: ../../components
+
+trailnexus_core:
+  id: tn_core
