@@ -3,8 +3,21 @@
   "exactKeysOnly": true,
   "cacheCompiledOutputs": false,
   "cacheQualificationResults": false,
-  "dependencySourceInputs": ["requirements.txt","targets/*.yaml","targets/*.yml"],
-  "pipPaths": ["~/.cache/pip"],
-  "platformioPaths": ["~/.platformio/packages","~/.platformio/platforms"],
-  "notes": ["Package/download reuse only. Every full-build decision still executes the compiler.","No restore-key prefixes, firmware binaries, credentials, provisioning data or qualification results are cached."]
+  "dependencySourceInputs": [
+    "requirements.txt",
+    "targets/*.yaml",
+    "targets/*.yml"
+  ],
+  "pipPaths": [
+    "~/.cache/pip"
+  ],
+  "notes": [
+    "Package/download reuse only. Every full-build decision still executes the compiler.",
+    "No restore-key prefixes, firmware binaries, credentials, provisioning data or qualification results are cached."
+  ],
+  "toolchainPaths": [
+    "~/.cache/esphome/idf/dist",
+    "~/.cache/esphome/idf/frameworks",
+    "~/.cache/esphome/idf/tools"
+  ]
 }
