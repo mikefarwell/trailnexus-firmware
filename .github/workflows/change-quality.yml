@@ -1,0 +1,46 @@
+name: Change quality
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: change-quality-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          path: project
+          fetch-depth: 0
+          persist-credentials: false
+          lfs: false
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: mikefarwell/trailnexus-firmware
+          ref: 78cf15406b9f12da990e5109cf92e838af7b8f1c
+          path: quality-tools
+          persist-credentials: false
+          lfs: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.13'
+      - name: Adapter failure-path tests
+        run: python -m unittest discover -s quality-tools/tests -p test_change_quality.py -v
+      - name: Install checksum-pinned scanner
+        run: python quality-tools/scripts/install_quality_scanner.py "$RUNNER_TEMP/gitleaks"
+      - name: Secret scan with redacted output
+        run: '"$RUNNER_TEMP/gitleaks/gitleaks" git --redact --no-banner --ignore-gitleaks-allow project'
+      - name: Changed JSON, Markdown targets and impact record
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          BASE="$BASE_SHA"
+          if [ -z "$BASE" ] || [ "$BASE" = "0000000000000000000000000000000000000000" ]; then
+            BASE=$(git -C project rev-parse HEAD^)
+          fi
+          python quality-tools/scripts/change_quality_gate.py --repo project --base "$BASE"
