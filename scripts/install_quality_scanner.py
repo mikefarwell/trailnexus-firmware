@@ -34,4 +34,3 @@ target = args.destination / filename
 target.write_bytes(binary)
 target.chmod(0o755)
 print(f"Verified Gitleaks {config['version']} installed at {target}")
-
