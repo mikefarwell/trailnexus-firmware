@@ -1,0 +1,50 @@
+{
+  "summary": "Declare software build profiles, conservative path-aware builds and exact dependency caches.",
+  "verification": [
+    "Seven tooling/policy unit tests",
+    "Hosted full build and metadata-only route",
+    "Exact-key dependency cache rerun"
+  ],
+  "impacts": {
+    "specifications": {
+      "status": "no-change",
+      "reason": "No product requirement, interface or behavior changes; engineering tooling is reviewed separately."
+    },
+    "product-firmware": {
+      "status": "no-change",
+      "reason": "No C++, target, configuration or runtime behavior changes."
+    },
+    "lab-firmware": {
+      "status": "no-change",
+      "reason": "No fixture behavior or pinned product dependency changes."
+    },
+    "system-overview": {
+      "status": "no-change",
+      "reason": "No customer system topology or compatibility changes."
+    },
+    "component-guides": {
+      "status": "no-change",
+      "reason": "No product installation or use changes."
+    },
+    "qa": {
+      "status": "updated",
+      "reason": "Add build-routing/cache failure-path tests and auditable software profile decisions; no physical acceptance limits change.",
+      "evidence": [
+        "docs/build-profiles.md",
+        "tests/test_build_policy.py"
+      ]
+    },
+    "cost": {
+      "status": "no-change",
+      "reason": "No production hardware or parts changes. CI uses the existing Actions allocation."
+    },
+    "shared-designs": {
+      "status": "no-change",
+      "reason": "No shared circuit edits."
+    },
+    "release": {
+      "status": "no-change",
+      "reason": "Development build routing changes; release targets, owner authorization and release publication remain unchanged."
+    }
+  }
+}
