@@ -4,7 +4,7 @@ import subprocess
 import tempfile
 import unittest
 
-GUARD = pathlib.Path(__file__).resolve().parents[1] / "components/trailnexus_core/n16r8_memory_guard.h"
+GUARD = pathlib.Path(__file__).resolve().parents[1] / "targets/core/n16r8_memory_guard.h"
 REQUIRED = (
     "CONFIG_IDF_TARGET_ESP32S3",
     "CONFIG_SPIRAM_MODE_OCT",

@@ -2,7 +2,7 @@
 esphome:
   name: trailnexus-core-s3-ecc
   includes:
-    - ../../components/trailnexus_core/n16r8_memory_guard.h
+    - n16r8_memory_guard.h
 
 esp32:
   board: esp32-s3-devkitc-1

@@ -9,6 +9,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         config: [targets/core/development.yaml, targets/core/s3-n16r8-ecc.yaml]
     steps:
