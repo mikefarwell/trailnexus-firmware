@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        config: [targets/core/development.yaml]
+        config: [targets/core/development.yaml, targets/bench/can-responder.yaml, targets/bench/can-scanner.yaml]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -18,5 +18,9 @@ jobs:
           python-version: '3.12'
       - run: g++ -std=c++17 -Wall -Wextra -Werror tests/board_registry.cpp -o /tmp/board-registry && /tmp/board-registry
       - run: g++ -std=c++17 -Wall -Wextra -Werror tests/port_recovery.cpp -o /tmp/port-recovery && /tmp/port-recovery
+      - run: g++ -std=c++17 -Wall -Wextra -Werror tests/can_discovery.cpp -o /tmp/can-discovery && /tmp/can-discovery
+      - run: g++ -std=c++17 -Wall -Wextra -Werror tests/can_enumerator.cpp -o /tmp/can-enumerator && /tmp/can-enumerator
+      - run: g++ -std=c++17 -Wall -Wextra -Werror tests/can_termination.cpp -o /tmp/can-termination && /tmp/can-termination
+      - run: g++ -std=c++17 -Wall -Wextra -Werror tests/can_hub_power_role.cpp -o /tmp/can-hub-power-role && /tmp/can-hub-power-role
       - run: python -m pip install -r requirements.txt
       - run: esphome compile "${{ matrix.config }}"
