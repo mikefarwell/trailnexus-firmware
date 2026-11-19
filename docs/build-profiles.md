@@ -11,4 +11,3 @@ Run `python -m unittest discover -s tests -p 'test_*.py' -v` locally. Inspect a 
 Software checks do not validate USB, automotive transients, current capacity, temperature, fixture operation or prototypes. No production cost changes are introduced; Actions/storage usage remains subject to the account's existing allocation.
 
 ESPHome 2026.10 uses its native ESP-IDF cache. Only framework/tool packages and download archives are cached; its Python environment and compiler-output cache are excluded. Different hosted runner image versions deliberately miss even when source is identical.
-
